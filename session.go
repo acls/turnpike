@@ -71,9 +71,8 @@ func (s *localPeer) Send(msg Message) (err error) {
 }
 
 func (s *localPeer) Close() error {
-	if s.outgoing != nil {
-		close(s.outgoing)
-		s.outgoing = nil
-	}
+	// Close and don't set to nil. When sending on the closed channel in
+	// the `Send` function it will panic and `recover()` will handle it.
+	close(s.outgoing)
 	return nil
 }
